@@ -50,46 +50,50 @@ func Find(name string) {
 			if err != nil {
 				return
 			}
-			// 判断数据库是否存在
-			for _, v := range temp {
-				fmt.Println("书名：", v.Name, " 作者：", v.Author, " url:"+v.Href)
-				v.CreateTime = time.Now()
-				// 判断数据库是否存在
-				data := models.Book{}
-				models.DB.Table("book").Where(map[string]interface{}{
-					"name":   v.Name,
-					"author": v.Author,
-				}).Last(&data)
-				// .Where("new_chapter != " + v.NewChapter).Where("chapter != new_chapter") 程序判断，不要影响索引
-				if utils.IsStructEmpty(data) {
-					models.DB.Table("book").Create(&v)
-					data = v
-				} else {
-					// 判断章节是否需要更新
-					if (data.NewChapter == v.NewChapter && data.Chapter == v.NewChapter) || v.Lock == 1 {
-						continue
-					}
-				}
-				// 更新小说
-				// func BqgCrawl(startUrl, bookname string, sign int)
-				models.DB.Table("book").Where("id = ?", data.ID).Update("lock", 1)
-				callback := func(id uint, name string, updateData *models.Book) {
-					// 因为结构体更新是非0属性，又不想用map那就改值叭
-					config.Log.Info(name + " 爬取成功")
-					updateData.Lock = 2
-					models.DB.Table("book").Where("id = ?", id).Updates(updateData)
-				}
-				go func(data models.Book) {
-					switch data.F {
-					case "BqgCrawl":
-						getter.BqgCrawl(data, callback)
-					case "BqgCrawl2":
-						getter.BqgCrawl2(data, callback)
-					}
-				}(data)
-			}
+			setText(temp)
 		}(f, name)
 	}
 	wg.Wait()
 	log.Println("All getters finished.")
+}
+
+func setText(temp []models.Book) {
+	// 判断数据库是否存在
+	for _, v := range temp {
+		fmt.Println("书名：", v.Name, " 作者：", v.Author, " url:"+v.Href)
+		v.CreateTime = time.Now()
+		// 判断数据库是否存在
+		data := models.Book{}
+		models.DB.Table("book").Where(map[string]interface{}{
+			"name":   v.Name,
+			"author": v.Author,
+		}).Last(&data)
+		// .Where("new_chapter != " + v.NewChapter).Where("chapter != new_chapter") 程序判断，不要影响索引
+		if utils.IsStructEmpty(data) {
+			models.DB.Table("book").Create(&v)
+			data = v
+		} else {
+			// 判断章节是否需要更新
+			if (data.NewChapter == v.NewChapter && data.Chapter == v.NewChapter) || v.Lock == 1 {
+				continue
+			}
+		}
+		// 更新小说
+		// func BqgCrawl(startUrl, bookname string, sign int)
+		models.DB.Table("book").Where("id = ?", data.ID).Update("lock", 1)
+		callback := func(id uint, name string, updateData *models.Book) {
+			// 因为结构体更新是非0属性，又不想用map那就改值叭
+			config.Log.Info(name + " 爬取成功")
+			updateData.Lock = 2
+			models.DB.Table("book").Where("id = ?", id).Updates(updateData)
+		}
+		go func(data models.Book) {
+			switch data.F {
+			case "BqgCrawl":
+				getter.BqgCrawl(data, callback)
+			case "BqgCrawl2":
+				getter.BqgCrawl2(data, callback)
+			}
+		}(data)
+	}
 }
