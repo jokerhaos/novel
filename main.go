@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"novel/config"
 	"novel/getter"
@@ -12,7 +13,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
+var statement = "======================================笔趣阁小说爬虫v1.0======================================\n" +
+	"免责声明：本爬虫仅供资料学习，请勿滥用，造成的一切后果与作者无关，地址：https://github.com/jokerhaos/novel\n" +
+	"测试阶段存在bug，不是所有小说都可以爬取。\n" +
+	"==============================================================================================="
+
 func main() {
+	fmt.Println(statement)
 	godotenv.Load(".env")
 	models.ConnectDB()
 	config.InitLog()
