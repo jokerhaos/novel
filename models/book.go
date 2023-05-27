@@ -11,7 +11,7 @@ type Book struct {
 	Status     int       `gorm:"column:status"`
 	Lock       int       `gorm:"column:lock"`
 	Type       string    `gorm:"column:type"`
-	Down       uint      `gorm:"column:down"`
+	Down       string    `gorm:"column:down"`
 	Chapter    string    `gorm:"column:chapter"`
 	NewChapter string    `gorm:"column:new_chapter"`
 	Image      string    `gorm:"column:image"`

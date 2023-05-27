@@ -125,7 +125,7 @@ func (s *SendRequest) send(method string, url string, param url.Values) ([]byte,
 
 	if resp.StatusCode != http.StatusOK {
 		// return nil, nil, errors.New(fmt.Sprintf("状态码：%d，内容：%s", resp.StatusCode, string(body)))
-		return nil, nil, errors.New(fmt.Sprintf("状态码：%d", resp.StatusCode))
+		return body, resp, errors.New(fmt.Sprintf("状态码：%d", resp.StatusCode))
 	}
 
 	return body, resp, nil

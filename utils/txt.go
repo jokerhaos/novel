@@ -3,6 +3,7 @@ package utils
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"os"
 )
 
@@ -49,4 +50,15 @@ func WriteToTxt(content, bookname, dirname string) {
 	write.WriteString(content)
 	write.Flush()
 	// fmt.Println("写入", bookname, "完成")
+}
+
+func CreateToTxt(content string, fileName string, dirname string) {
+	Mkdir(filePath + dirname)
+	filepath := filePath + dirname + "/" + fileName + ".txt" // 存放小说的TXT文件路径
+	err := ioutil.WriteFile(filepath, []byte(content), 0644)
+	if err != nil {
+		fmt.Println("写入文件失败:", err)
+		return
+	}
+	// fmt.Println("写入", fileName, "完成")
 }

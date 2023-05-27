@@ -74,9 +74,9 @@ func Ibiquges(name string) (books []models.Book, err error) {
 	return books, nil
 }
 
-func BqgCrawl(data models.Book, callback func(uint, string, models.Book)) {
+func BqgCrawl(data models.Book, callback func(uint, string, *models.Book)) {
 	updateData := &models.Book{}
-	defer callback(data.ID, data.Name, *updateData)
+	defer callback(data.ID, data.Name, updateData)
 	headers := http.Header{}
 	headers.Set("Content-Type", "application/x-www-form-urlencoded")
 	headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
@@ -111,21 +111,23 @@ func BqgCrawl(data models.Book, callback func(uint, string, models.Book)) {
 	}
 	updateData.Image = dom.Find("#fmimg img").AttrOr("src", "")
 	updateData.Describe = dom.Find("#intro p").Eq(1).Text()
+	updateData.Type = dom.Find(".con_top a").Eq(2).Text()
+	updateData.Down = "./text/" + data.Author + "/" + data.Name + ".txt"
 	start := false
 	if data.Chapter == "" {
-		utils.WriteToTxt(data.Name, data.Name, data.Author)
+		utils.CreateToTxt(data.Name, data.Name, data.Author)
 		utils.WriteToTxt("作者："+data.Author+"\r\n", data.Name, data.Author)
 		start = true
 	}
 
 	dom.Find("#list dd").EachWithBreak(func(i int, s *goquery.Selection) bool {
 		title := s.Find("a").Text()
+		updateData.Chapter = title
 		url := "https://www.ibiquges.com" + s.Find("a").AttrOr("href", "")
 		defer func() {
 			// 判断章节
 			if data.Chapter == title {
 				start = true
-				updateData.Chapter = title
 			}
 		}()
 
