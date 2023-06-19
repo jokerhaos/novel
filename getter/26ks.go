@@ -13,10 +13,10 @@ import (
 )
 
 const (
-	IbiqugesDomain string = "https://www.ibiquges.com"
+	KsDomain string = "http://www.26ks.org"
 )
 
-func AllIbiquges() (books []models.Book, err error) {
+func AllKs() (books []models.Book, err error) {
 	url := IbiqugesDomain + "/xiaoshuodaquan"
 	headers := http.Header{}
 	headers.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -43,7 +43,7 @@ func AllIbiquges() (books []models.Book, err error) {
 	return
 }
 
-func Ibiquges(name string) (books []models.Book, err error) {
+func FindKs(name string) (books []models.Book, err error) {
 	pollURL := IbiqugesDomain + "/modules/article/waps.php"
 	headers := http.Header{}
 	headers.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -104,7 +104,7 @@ func Ibiquges(name string) (books []models.Book, err error) {
 	return books, nil
 }
 
-func BqgCrawl(data models.Book, callback func(uint, string, *models.Book)) {
+func KsCrawl(data models.Book, callback func(uint, string, *models.Book)) {
 	updateData := &models.Book{}
 	defer callback(data.ID, data.Name, updateData)
 	headers := http.Header{}

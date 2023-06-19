@@ -57,6 +57,14 @@ func Find(name string) {
 	log.Println("All getters finished.")
 }
 
+// 全量小说
+func All() {
+	funs := []pcfun{
+		getter.AllBiqudd,
+		getter.AllIbiquges,
+	}
+}
+
 func setText(temp []models.Book) {
 	// 判断数据库是否存在
 	for _, v := range temp {

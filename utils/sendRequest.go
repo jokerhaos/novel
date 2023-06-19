@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/net/html/charset"
 	"golang.org/x/net/proxy"
 )
 
@@ -128,7 +129,17 @@ func (s *SendRequest) send(method string, url string, param url.Values) ([]byte,
 		return body, resp, errors.New(fmt.Sprintf("状态码：%d", resp.StatusCode))
 	}
 
-	return body, resp, nil
+	// 从响应头中获取字符集编码
+	contentType := resp.Header.Get("Content-Type")
+	charsetReader, err := charset.NewReader(strings.NewReader(string(body)), contentType)
+
+	bodyString, err := ioutil.ReadAll(charsetReader)
+	if err != nil {
+		fmt.Println("字符集解码失败:", err)
+		return nil, nil, err
+	}
+
+	return bodyString, resp, nil
 }
 
 func (s *SendRequest) Post(url string, param url.Values) ([]byte, *http.Response, error) {
