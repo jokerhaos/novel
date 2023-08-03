@@ -178,9 +178,12 @@ func BqgCrawl2(data models.Book, callback func(uint, string, *models.Book)) {
 		}
 		dom2, _ := goquery.NewDocumentFromReader(strings.NewReader(string(body)))
 		context := dom2.Find("#content").Text()
+		fmt.Println(context)
+		re := regexp.MustCompile(`<br\s*/?>`)
+		context = re.ReplaceAllString(context, "\r\n\r\n")
 		// 写入小说
-		utils.WriteToTxt(title+"\r\n", data.Name, data.Author)
-		utils.WriteToTxt(context+"\r\n", data.Name, data.Author)
+		utils.WriteToTxt(title+"\r\n\r\n", data.Name, data.Author)
+		utils.WriteToTxt(context+"\r\n\r\n", data.Name, data.Author)
 
 		return true
 	})

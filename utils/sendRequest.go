@@ -39,6 +39,21 @@ func NewSendRequest(headers http.Header, boundary string) *SendRequest {
 	}
 }
 
+func (s *SendRequest) SetBiqugeHeaders() {
+	s.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+	s.Headers.Set("Accept-Language", "zh-CN,zh;q=0.9")
+	s.Headers.Set("Cache-Control", "no-cache")
+	s.Headers.Set("Pragma", "no-cache")
+	s.Headers.Set("Sec-Ch-Ua", "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"")
+	s.Headers.Set("Sec-Ch-Ua-Mobile", "?0")
+	s.Headers.Set("Sec-Ch-Ua-Platform", "\"Windows\"")
+	s.Headers.Set("Sec-Fetch-Dest", "document")
+	s.Headers.Set("Sec-Fetch-Mode", "navigate")
+	s.Headers.Set("Sec-Fetch-Site", "none")
+	s.Headers.Set("Sec-Fetch-User", "?1")
+	s.Headers.Set("Upgrade-Insecure-Requests", "1")
+}
+
 func (s *SendRequest) SetHeaders(headers map[string]string) {
 	// 设置请求头
 	for key, value := range headers {
