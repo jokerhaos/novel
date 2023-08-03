@@ -166,8 +166,11 @@ func biquge(uri string, bookId string) {
 		dom2, _ := goquery.NewDocumentFromReader(strings.NewReader(string(body)))
 		context := dom2.Find("#content").Text()
 		// 写入小说
-		utils.WriteToTxt(title+"\r\n", data.Name, data.Author)
-		utils.WriteToTxt(context+"\r\n", data.Name, data.Author)
+		re := regexp.MustCompile(`(\r\n|\n|    |<br\s*/?>)`)
+		context = re.ReplaceAllString(context, "\r\n\r\n")
+		// 写入小说
+		utils.WriteToTxt(title+"\r\n\r\n", data.Name, data.Author)
+		utils.WriteToTxt(context+"\r\n\r\n", data.Name, data.Author)
 		fmt.Println(title, "写入成功")
 		return true
 	})
