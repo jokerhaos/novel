@@ -13,6 +13,9 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+type Text458t struct {
+}
+
 func T(name string) (books []models.Book, err error) {
 	// https://www.biqudd.com/
 	pollURL := "https://www.biqudd.com/modules/article/search.php"

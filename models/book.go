@@ -18,4 +18,5 @@ type Book struct {
 	F          string    `gorm:"column:f"`
 	CreateTime time.Time `gorm:"column:create_time"`
 	UpdateTime time.Time `gorm:"column:update_time"`
+	Loeva      string
 }
