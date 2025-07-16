@@ -111,22 +111,7 @@ func DownTxt(data *models.Book) {
 	dom.Find(".book-list li").EachWithBreak(func(i int, s *goquery.Selection) bool {
 		title := s.Find("a").Text()
 		url := "https://www.banxia.la" + s.Find("a").AttrOr("href", "")
-		defer func() {
-			// 判断章节
-			// if data.Chapter == title {
-			// 	start = true
-			// }
-		}()
-		if title == "<<---展开全部章节--->>" {
-			// 循环另一个
-			// dom.Find(".dd_hide dd").EachWithBreak(func(i int, s *goquery.Selection) bool {
-			// 	return true
-			// })
-			return true
-		}
-		// if !start {
-		// 	return true
-		// }
+		// fmt.Println("爬取地址：", url)
 		// 开始爬虫
 		body, resp, err := req.RepeatSend("GET", url, nil)
 		if resp.StatusCode != http.StatusServiceUnavailable && err != nil {
@@ -141,7 +126,7 @@ func DownTxt(data *models.Book) {
 		context = re.ReplaceAllString(context, "\r\n\r\n")
 		// 写入小说
 		// utils.WriteToTxt(title+"\r\n\r\n", data.Name, data.Author)
-		// utils.WriteToTxt(context+"\r\n\r\n", data.Name, data.Author)
+		utils.WriteToTxt(context+"\r\n\r\n", data.Name, data.Author)
 		fmt.Println(title, "写入成功")
 		return true
 	})
