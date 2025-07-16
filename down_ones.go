@@ -21,6 +21,13 @@ type TextObj struct {
 }
 
 func main() {
+	Down458t(&models.Book{
+		Name:   "牧烟不渡[先婚后爱]",
+		Author: "银河客",
+		Loeva:  "137章",
+		Href:   "https://www.458t.com/book/80397.html",
+	})
+	return
 	var text string
 	fmt.Printf("请输入小说名字:")
 	fmt.Scanf("%s", &text)
@@ -43,7 +50,6 @@ func main() {
 	}
 	// 通过浏览器去爬
 	Down458t(&list[sel])
-	// DownBiququ("4234")
 	// DownGashuw("/biquge_110771/")
 }
 
@@ -197,9 +203,9 @@ func biquge(uri string, bookId string) {
 }
 
 func DownBiququ(bookId string) {
-	uri := "https://www.biququ.info"
+	uri := "https://www.458t.com"
 	data := &models.Book{
-		Href: uri + "/html/" + bookId,
+		Href: uri + "/book/" + bookId + ".html",
 	}
 
 	req := utils.NewSendRequest(http.Header{}, "")
@@ -302,26 +308,29 @@ func PrintTable(list []models.Book) {
 		nameWidth    = 40
 		authorWidth  = 20
 		chapterWidth = 30
+		herfWidth    = 30
 	)
 
 	// 打印标题行
-	fmt.Printf("%-*s %-*s %-*s %-*s\n", idWidth, "序号", nameWidth, "名字", authorWidth, "作者", chapterWidth, "最新章节")
+	fmt.Printf("%-*s %-*s %-*s %-*s %-*s\n", idWidth, "序号", nameWidth, "名字", authorWidth, "作者", chapterWidth, "最新章节", herfWidth, "下载地址")
 
 	// 打印分割线
-	fmt.Printf("%s %s %s %s\n",
+	fmt.Printf("%s %s %s %s %s\n",
 		strings.Repeat("-", idWidth),
 		strings.Repeat("-", nameWidth),
 		strings.Repeat("-", authorWidth),
 		strings.Repeat("-", chapterWidth),
+		strings.Repeat("-", herfWidth),
 	)
 
 	// 打印数据行
 	for k, v := range list {
-		fmt.Printf("%-*d %-*s %-*s %-*s\n",
+		fmt.Printf("%-*d %-*s %-*s %-*s %-*s\n",
 			idWidth, k,
 			nameWidth+GetDisplayWidth(v.Name)-len(v.Name), v.Name,
 			authorWidth+GetDisplayWidth(v.Author)-len(v.Author), v.Author,
 			chapterWidth+GetDisplayWidth(v.Loeva)-len(v.Loeva), v.Loeva,
+			chapterWidth+GetDisplayWidth(v.Href)-len(v.Href), v.Href,
 		)
 	}
 }
